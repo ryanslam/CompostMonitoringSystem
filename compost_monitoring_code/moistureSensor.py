@@ -15,18 +15,17 @@ class MoistureSensor(ReadSensor):
             print("\tAdding Val: ", sCalibrateVals[i])
             time.sleep(1)
         
-        self.maxVal = max(sCalibrateVals)
-        self.minVal = min(sCalibrateVals)
+        self.airVal = max(sCalibrateVals)
+        self.waterVal = min(sCalibrateVals)
 
-        print("Max Value: ", self.maxVal)
-        print("Min Value: ", self.minVal)
+        print("Max Value: ", self.airVal)
+        print("Min Value: ", self.waterVal)
         print("\nDone calibrating")
 
     # Maps the raw input accordingly
     def mapSensorVals(self):
-        val = 0
-        try:
-            val = int((self.getVal() - 0) * (950 - 0) / (self.maxVal - 0) + 0)
-        except Exception as e:
-            pass
+        val = self.getVal()
+        val = (val - self.waterVal)/(self.airVal - self.waterVal)
+        val *= 100
+        val = 100 - val
         return val
